@@ -1,7 +1,7 @@
-require "pry-vterm_aliases/version"
-require "pry"
+require 'pry-vterm_aliases/version'
+require 'pry'
 
-unless ::RbConfig::CONFIG["host_os"] =~ /mswin|mingw32/
+unless ::RbConfig::CONFIG['host_os'] =~ /mswin|mingw32/
   class Pry
     module VTermAliases
       class << self
@@ -28,18 +28,18 @@ unless ::RbConfig::CONFIG["host_os"] =~ /mswin|mingw32/
 
         def aliases
           @aliases ||= if shell.nil? || shell.empty?
-            then {}
-            else find_aliases
-          end
+                         then {}
+                       else find_aliases
+                       end
         end
 
         def shell
-          @shell ||= ENV["SHELL"].split("/").last
+          @shell ||= ENV['SHELL'].split('/').last
         end
 
         def run_alias(cmd, extra, output)
-          raise ArgumentError, "unknown alias" unless (cmd = aliases[cmd])
-          output.puts(`#{cmd}#{" " + extra if extra}`)
+          raise ArgumentError, 'unknown alias' unless (cmd = aliases[cmd])
+          output.puts(`#{cmd}#{' ' + extra if extra}`)
           $?.success?
         end
 
@@ -56,14 +56,13 @@ unless ::RbConfig::CONFIG["host_os"] =~ /mswin|mingw32/
         private
         def find_aliases
           `#{shell} -ic 'alias'`.split(/\n/).inject({}) do |h, a|
-            if a =~ /\Aalias\s+/
-              a = a.sub(/\Aalias\s/, "").split("=")
-              unless a.first =~ /\s/
-                strip_wrapping_quotes(a.shift).tap do |k|
-                  h.update(
-                    k => Shellwords.shellwords(a.join("=")).join
-                  )
-                end
+            a.sub!(/\Aalias\s/, '') if a =~ /\Aalias\s+/
+            a = a.split('=')
+            unless a.first =~ /\s/
+              strip_wrapping_quotes(a.shift).tap do |k|
+                h.update(
+                  k => Shellwords.shellwords(a.join("=")).join
+                )
               end
             end
 
@@ -78,7 +77,7 @@ unless ::RbConfig::CONFIG["host_os"] =~ /mswin|mingw32/
           Pry::VTermAliases.run_alias(als.gsub(/\A\./, ""), extra, out)
           if !out.is_a?(StringIO)
             then out else out.string
-          end
+            end
         end
       end
     end
