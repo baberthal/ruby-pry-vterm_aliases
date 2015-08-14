@@ -56,14 +56,13 @@ unless ::RbConfig::CONFIG["host_os"] =~ /mswin|mingw32/
         private
         def find_aliases
           `#{shell} -ic 'alias'`.split(/\n/).inject({}) do |h, a|
-            if a =~ /\Aalias\s+/
-              a = a.sub(/\Aalias\s/, "").split("=")
-              unless a.first =~ /\s/
-                strip_wrapping_quotes(a.shift).tap do |k|
-                  h.update(
-                    k => Shellwords.shellwords(a.join("=")).join
-                  )
-                end
+            a.sub!(/\Aalias\s/, '') if a =~ /\Aalias\s+/
+            a = a.split('=')
+            unless a.first =~ /\s/
+              strip_wrapping_quotes(a.shift).tap do |k|
+                h.update(
+                  k => Shellwords.shellwords(a.join("=")).join
+                )
               end
             end
 
