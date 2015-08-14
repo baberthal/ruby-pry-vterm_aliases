@@ -1,4 +1,4 @@
-require "rspec/helper"
+require "spec_helper"
 
 describe Pry::VTermAliases do
   subject { Pry::VTermAliases }
